@@ -1,0 +1,5 @@
+scripts/get_api_key.py
+.DS_Store
+output/*
+input/*
+completed/*

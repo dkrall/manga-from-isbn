@@ -2,6 +2,7 @@
 import sys
 import subprocess
 import requests
+import time
 from get_api_key import get_api_key
 from util import get_filepath_to_output_file
 
@@ -21,11 +22,19 @@ def get_manga_from_isbn():
     input_filepath = get_filepath_to_input_file()
     input_file = open(input_filepath, 'r')
     readline = input_file.readline()
+    counter = 0
 
     while readline:
+        # API accepts maximum of 100 calls per minute. Wait 1 minute of cooldown to be safe after each 100 calls.
+        if counter > 99:
+            counter = 0
+            # Sleep for 70 seconds, as the API is a bit finicky about how it calculates usage
+            time.sleep(70)
+
         isbn = readline.replace('\n', '')
         populate_output_json(isbn)
         readline = input_file.readline()
+        counter+=1
 
     input_file.close()
 
